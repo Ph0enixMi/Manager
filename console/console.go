@@ -32,12 +32,13 @@ func PrintList(list []string, description []string) error {
 	}
 
 	fmt.Println()
-	spaces := utils.GetSpaces(bar)
+	spaces := utils.GetSpacesBar(bar)
+	mx := utils.GetMaxLn(list)
 	for i, elem := range list {
 		if description != nil {
-			fmt.Printf("%v%v - %v\n", spaces, elem, description[i])
+			fmt.Printf("%v%v%v - %v\n", spaces, utils.GetSpaces(elem, mx), elem, description[i])
 		} else {
-			fmt.Printf("%v%v: %v\n", spaces, i, elem)
+			fmt.Printf("%v%v: %v\n", spaces, i+1, elem)
 		}
 	}
 	fmt.Println()
@@ -45,7 +46,7 @@ func PrintList(list []string, description []string) error {
 }
 
 func PrintEmpty(text string) {
-	spaces := utils.GetSpaces(bar)
+	spaces := utils.GetSpacesBar(bar)
 	fmt.Println()
 	fmt.Printf("%v%v\n", spaces, text)
 	fmt.Println()
