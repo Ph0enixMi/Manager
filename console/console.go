@@ -66,6 +66,10 @@ func GetCommand(commands_list []string) (string, string, error) {
 
 	command = strings.TrimSpace(command)
 
+	if len(command) == 0 {
+		return "", "", errors.New("empty input")
+	}
+
 	for _, elem := range commands_list {
 		del := 0
 		flag := true

@@ -24,7 +24,7 @@ func main() {
 	for {
 		command, argument, err := console.GetCommand(commands_list)
 		if err != nil {
-			console.PrintEmpty("Неверно введена комманда")
+			console.PrintEmpty("Введите help")
 		}
 
 		switch command {
