@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"manager/console"
 )
 
@@ -23,16 +22,20 @@ func main() {
 	var metier_list []string
 	console.ClearScreen()
 	for {
-		command, err := console.GetCommand()
+		command, argument, err := console.GetCommand(commands_list)
 		if err != nil {
-			fmt.Println("Неверно введена комманда")
+			console.PrintEmpty("Неверно введена комманда")
 		}
 
 		switch command {
 		case commands_list[0]:
-			err := console.PrintList(commands_list, commands_descriptions)
-			if err != nil {
-				fmt.Println("Ошибка: комманды отсутсвуют")
+			if len(argument) > 0 {
+				console.PrintEmpty("Ошибка, комманда не поддерживает аргумент")
+			} else {
+				err := console.PrintList(commands_list, commands_descriptions)
+				if err != nil {
+					console.PrintEmpty("Ошибка: комманды отсутсвуют")
+				}
 			}
 		case commands_list[1]:
 			err := console.PrintList(metier_list, nil)
@@ -40,6 +43,7 @@ func main() {
 				console.PrintEmpty("Задачи отсутсвуют")
 			}
 		case commands_list[2]:
+			return
 		case commands_list[3]:
 			return
 		}
