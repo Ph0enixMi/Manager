@@ -96,19 +96,13 @@ func GetCommand(commands_list []string) (string, string, error) {
 		if del == 0 {
 			if flag && len(command) == len(elem) {
 				break
+			} else if flag && len(command) > len(elem) {
+				argument = command[len(elem)+1:]
 			}
 		} else {
 			if flag && len(command) == len(elem[:del-1]) {
 				break
-			}
-		}
-
-		if del == 0 {
-			if flag && len(command) > len(elem) {
-				argument = command[len(elem)+1:]
-			}
-		} else {
-			if flag && len(command) > len(elem[:del-1]) {
+			} else if flag && len(command) > len(elem[:del-1]) {
 				argument = command[del:]
 			}
 		}
