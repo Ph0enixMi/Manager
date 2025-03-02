@@ -71,14 +71,8 @@ func GetCommand(commands_list []string) (string, string, error) {
 	}
 
 	for _, elem := range commands_list {
-		del := 0
+		del, _ := GetDel(elem)
 		flag := true
-
-		for i, rn := range elem {
-			if string(rn) == "[" {
-				del = i
-			}
-		}
 
 		for i, rn := range elem {
 			if del == 0 {
@@ -115,6 +109,14 @@ func GetCommand(commands_list []string) (string, string, error) {
 	if argument != "" {
 		command = command[:len(command)-len(argument)-1]
 	}
-
 	return command, strings.TrimSpace(argument), nil
+}
+
+func GetDel(command string) (int, error) {
+	for i, rn := range command {
+		if string(rn) == "[" {
+			return i, nil
+		}
+	}
+	return 0, errors.New("command dont have [")
 }

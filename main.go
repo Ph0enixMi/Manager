@@ -31,12 +31,13 @@ func main() {
 			// console.PrintEmpty("Введите help")
 		}
 
+		del1, _ := console.GetDel(commands_list[2])
 		switch command {
 		case commands_list[0]:
 			HelpCommand(argument, commands_list, commands_descriptions)
 		case commands_list[1]:
 			ShowTimeCommand(metier_list)
-		case commands_list[2]:
+		case commands_list[2][:del1-1]:
 			metier_list = CreateTimeCommand(metier_list, argument)
 			fmt.Println(metier_list)
 		case commands_list[3]:
