@@ -111,7 +111,6 @@ func GetCommand(commands_list []string) (string, string, error) {
 	if argument != "" {
 		command = command[:len(command)-len(argument)-1]
 	}
-	fmt.Println("comm:", command, "argum:", argument)
 
 	return command, strings.TrimSpace(argument), nil
 }
