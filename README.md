@@ -1,4 +1,4 @@
-# Task Manager
+# Manager
 
 В разработке.
 
