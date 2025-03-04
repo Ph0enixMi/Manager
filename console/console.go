@@ -103,6 +103,7 @@ func GetCommand(commands_list []string) (string, []string, error) {
 			if flag && len(command) == len(elem[:del[0]-1]) {
 				break
 			} else if flag && len(command) > len(elem[:del[0]-1]) {
+				// Костыль
 				if len(del) == 1 {
 					arguments = append(arguments, command[del[0]:])
 				} else {
@@ -114,13 +115,16 @@ func GetCommand(commands_list []string) (string, []string, error) {
 	}
 
 	if len(arguments) != 0 {
-		// Вырезать список аргументов
-		command = command[:len(command)-len(arguments[0])-1]
+		ln_args := 0
+		for _, elem := range arguments {
+			ln_args += len(elem) + 1
+		}
+		command = command[:len(command)-ln_args+1]
+		command = strings.TrimSpace(command)
 	}
 	for i, arg := range arguments {
 		arguments[i] = strings.TrimSpace(arg)
 	}
-
 	return command, arguments, nil
 }
 
