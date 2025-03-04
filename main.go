@@ -40,7 +40,7 @@ func main() {
 		del2, _ := console.GetDel(commands_list[3])
 		del3, _ := console.GetDel(commands_list[4])
 
-		fmt.Println(arguments, len(arguments))
+		// fmt.Println(arguments, len(arguments))
 
 		switch command {
 		case commands_list[0]:
