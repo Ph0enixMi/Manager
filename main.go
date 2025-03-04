@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"manager/console"
 	"manager/tasktime"
 )
@@ -11,7 +10,7 @@ var commands_list = []string{
 	"show time",
 	"create time [name]",
 	"delete time [index]",
-	"write time [index] [count]",
+	"write time [index] [time]",
 	"clear",
 	"exit",
 }
@@ -21,14 +20,14 @@ var commands_descriptions = []string{
 	"Список всех задач",
 	"Создать задачу",
 	"Удалить задачу",
-	"Записать время на задачу",
+	"Записать время на задачу (пример: 1 10)",
 	"Очистить консоль",
 	"Выход из программы",
 }
 
 func main() {
 	var metier_list []string
-	// var time_list []string
+	var time_list []string
 	console.ClearScreen()
 	for {
 		command, arguments, err := console.GetCommand(commands_list)
@@ -53,7 +52,7 @@ func main() {
 		case commands_list[3][:del2[0]-1]:
 			metier_list = DeleteTimeCommand(metier_list, arguments)
 		case commands_list[4][:del3[0]-1]:
-			WriteTimeCommand(arguments)
+			time_list = WriteTimeCommand(time_list, arguments)
 		case commands_list[5]:
 			console.ClearScreen()
 		case commands_list[6]:
@@ -96,6 +95,15 @@ func DeleteTimeCommand(metier_list []string, argument []string) []string {
 	return res
 }
 
-func WriteTimeCommand(arguments []string) {
-	fmt.Println("argumnets:", arguments)
+func WriteTimeCommand(time_list []string, arguments []string) []string {
+	if len(arguments) == 0 || len(arguments) > 3 {
+		console.PrintEmpty("Недопустнипое количество атрибутов")
+		return time_list
+	}
+	res, err := tasktime.WriteTime(time_list, arguments)
+	if err != nil {
+		console.PrintEmpty("Неправельно введены аргумент{ы}")
+	}
+	// fmt.Println("argumnets:", arguments, "len:", len(arguments), "res:", res)
+	return res
 }
