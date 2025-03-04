@@ -52,8 +52,9 @@ func PrintEmpty(text string) {
 	fmt.Println()
 }
 
-func GetCommand(commands_list []string) (string, string, error) {
-	var command, argument string
+func GetCommand(commands_list []string) (string, []string, error) {
+	var command string
+	var arguments []string
 	scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Print(bar)
@@ -62,13 +63,13 @@ func GetCommand(commands_list []string) (string, string, error) {
 		command = scanner.Text()
 	}
 	if err := scanner.Err(); err != nil {
-		return "", "", errors.New("command input error")
+		return "", arguments, errors.New("command input error")
 	}
 
 	command = strings.TrimSpace(command)
 
 	if len(command) == 0 {
-		return "", "", errors.New("empty input")
+		return "", arguments, errors.New("empty input")
 	}
 
 	for _, elem := range commands_list {
@@ -76,48 +77,88 @@ func GetCommand(commands_list []string) (string, string, error) {
 		flag := true
 
 		for i, rn := range elem {
-			if del == 0 {
+			if len(del) == 0 {
 				if string(rn) != string(command[i]) {
 					flag = false
 					break
 				}
-			} else if i < del-1 && len(command) >= len(elem[:del-1]) {
+			} else if i < del[0]-1 && len(command) >= len(elem[:del[0]-1]) {
 				if string(rn) != string(command[i]) {
 					flag = false
 					break
 				}
-			} else if len(command) < len(elem[:del-1]) {
+			} else if len(command) < len(elem[:del[0]-1]) {
 				flag = false
 				break
 			}
 		}
 
-		if del == 0 {
+		if len(del) == 0 {
 			if flag && len(command) == len(elem) {
 				break
 			} else if flag && len(command) > len(elem) {
-				argument = command[len(elem)+1:]
+				arguments = append(arguments, command[len(elem)+1:])
 			}
 		} else {
-			if flag && len(command) == len(elem[:del-1]) {
+			if flag && len(command) == len(elem[:del[0]-1]) {
 				break
-			} else if flag && len(command) > len(elem[:del-1]) {
-				argument = command[del:]
+			} else if flag && len(command) > len(elem[:del[0]-1]) {
+				if len(del) == 1 {
+					arguments = append(arguments, command[del[0]:])
+				} else {
+					new_arguments := GetSpaceArguments(command[del[0]:])
+					arguments = append(arguments, new_arguments...)
+				}
 			}
 		}
 	}
 
-	if argument != "" {
-		command = command[:len(command)-len(argument)-1]
+	if len(arguments) != 0 {
+		// Вырезать список аргументов
+		command = command[:len(command)-len(arguments[0])-1]
 	}
-	return command, strings.TrimSpace(argument), nil
+	for i, arg := range arguments {
+		arguments[i] = strings.TrimSpace(arg)
+	}
+
+	return command, arguments, nil
 }
 
-func GetDel(command string) (int, error) {
+func GetDel(command string) ([]int, error) {
+	var del_list []int
 	for i, rn := range command {
 		if string(rn) == "[" {
-			return i, nil
+			del_list = append(del_list, i)
 		}
 	}
-	return 0, errors.New("command dont have [")
+	if len(del_list) == 0 {
+		return del_list, errors.New("command dont have [")
+	}
+	return del_list, nil
+}
+
+func GetSpaceArguments(arguments string) []string {
+	var arguments_list []string
+	var del []int
+	for i, rn := range arguments {
+		if string(rn) == " " {
+			del = append(del, i)
+		}
+	}
+
+	if len(del) == 0 {
+		return arguments_list
+	}
+
+	for i, v := range del {
+		if i == 0 {
+			arguments_list = append(arguments_list, arguments[:v])
+		} else if i > 0 && i <= len(del)-1 {
+			arguments_list = append(arguments_list, arguments[del[i-1]+1:v])
+		}
+		if i == len(del)-1 {
+			arguments_list = append(arguments_list, arguments[v:])
+		}
+	}
+	return arguments_list
 }
