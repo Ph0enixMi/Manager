@@ -26,7 +26,7 @@ func ClearScreen() {
 	}
 }
 
-func PrintList(list []string, description []string) error {
+func PrintList(list []string, description []string, time bool) error {
 	if len(list) == 0 {
 		return errors.New("empty list")
 	}
@@ -35,8 +35,10 @@ func PrintList(list []string, description []string) error {
 	spaces := utils.GetSpacesBar(bar)
 	mx := utils.GetMaxLn(list)
 	for i, elem := range list {
-		if description != nil {
+		if description != nil && !time {
 			fmt.Printf("%v%v%v - %v\n", spaces, utils.GetSpaces(elem, mx), elem, description[i])
+		} else if time && len(description) > i && len(description[i]) > 1 {
+			fmt.Printf("%v%v: %v%v - %v\n", spaces, i+1, elem, utils.GetSpaces(elem, mx), description[i])
 		} else {
 			fmt.Printf("%v%v: %v\n", spaces, i+1, elem)
 		}

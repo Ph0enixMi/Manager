@@ -23,8 +23,8 @@ func DeleteTimeTask(metier_list []string, task string) ([]string, error) {
 
 func WriteTime(time_list []string, arguments []string) ([]string, error) {
 	index, err1 := strconv.Atoi(arguments[0])
-	hour, err2 := strconv.Atoi(arguments[1])
-	minute, err3 := strconv.Atoi(arguments[2])
+	arg_hour, err2 := strconv.Atoi(arguments[1])
+	arg_minute, err3 := strconv.Atoi(arguments[2])
 
 	if err1 != nil || err2 != nil || err3 != nil {
 		return time_list, errors.New("invalid argumetn")
@@ -36,7 +36,7 @@ func WriteTime(time_list []string, arguments []string) ([]string, error) {
 		}
 	}
 
-	time_list[index-1] = strconv.Itoa(hour) + " ч, " + strconv.Itoa(minute) + " м"
+	time_list[index-1] = strconv.Itoa(arg_hour) + " ч; " + strconv.Itoa(arg_minute) + " м"
 
 	return time_list, nil
 }

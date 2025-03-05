@@ -46,13 +46,13 @@ func main() {
 		case commands_list[0]:
 			HelpCommand(arguments, commands_list, commands_descriptions)
 		case commands_list[1]:
-			ShowTimeCommand(metier_list)
+			ShowTimeCommand(metier_list, time_list)
 		case commands_list[2][:del1[0]-1]:
 			metier_list = CreateTimeCommand(metier_list, arguments)
 		case commands_list[3][:del2[0]-1]:
 			metier_list = DeleteTimeCommand(metier_list, arguments)
 		case commands_list[4][:del3[0]-1]:
-			time_list = WriteTimeCommand(time_list, arguments)
+			time_list = WriteTimeCommand(metier_list, time_list, arguments)
 		case commands_list[5]:
 			console.ClearScreen()
 		case commands_list[6]:
@@ -65,17 +65,21 @@ func HelpCommand(argument []string, commands_list []string, commands_description
 	if len(argument) > 0 {
 		console.PrintEmpty("Ошибка: комманда не поддерживает аргумент")
 	} else {
-		err := console.PrintList(commands_list, commands_descriptions)
+		err := console.PrintList(commands_list, commands_descriptions, false)
 		if err != nil {
 			console.PrintEmpty("Ошибка: комманды отсутсвуют")
 		}
 	}
 }
 
-func ShowTimeCommand(metier_list []string) {
-	err := console.PrintList(metier_list, nil)
-	if err != nil {
-		console.PrintEmpty("Задачи отсутствуют")
+func ShowTimeCommand(metier_list []string, time_list []string) {
+	if len(time_list) != 0 {
+		console.PrintList(metier_list, time_list, true)
+	} else {
+		err := console.PrintList(metier_list, nil, false)
+		if err != nil {
+			console.PrintEmpty("Задачи отсутствуют")
+		}
 	}
 }
 
@@ -95,7 +99,7 @@ func DeleteTimeCommand(metier_list []string, argument []string) []string {
 	return res
 }
 
-func WriteTimeCommand(time_list []string, arguments []string) []string {
+func WriteTimeCommand(metier_list []string, time_list []string, arguments []string) []string {
 	if len(arguments) == 0 || len(arguments) > 3 {
 		console.PrintEmpty("Недопустнипое количество атрибутов")
 		return time_list
@@ -104,6 +108,5 @@ func WriteTimeCommand(time_list []string, arguments []string) []string {
 	if err != nil {
 		console.PrintEmpty("Неправельно введены аргумент{ы}")
 	}
-	// fmt.Println("argumnets:", arguments, "len:", len(arguments), "res:", res)
 	return res
 }
